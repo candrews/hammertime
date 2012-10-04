@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.integralblue.hammertime.exception.ResourceNotFoundException;
 import com.integralblue.hammertime.model.Project;
 
 @Controller
@@ -22,9 +21,15 @@ public class ProjectController {
 	@PersistenceContext
     private EntityManager entityManager;
 	
-	@RequestMapping(value="/project/{name}",method=RequestMethod.GET, consumes="text/html", produces="text/html")
-	public ModelAndView createProject(){
+	@RequestMapping(value="/project/create",method=RequestMethod.GET)
+	public ModelAndView createProjectForm(Project project){
 		return new ModelAndView("project/create");
+	}
+	
+	@RequestMapping(value="/project/create",method=RequestMethod.POST)
+	public String createProject(@ModelAttribute @Valid Project project){
+		entityManager.persist(project);
+		return "redirect:/projects/{name}";
 	}
 	
 	@RequestMapping(value="/project/{name}",method=RequestMethod.PUT)
@@ -35,23 +40,20 @@ public class ProjectController {
 
 	@RequestMapping(value="/project/{name}",method=RequestMethod.POST)
 	public ModelAndView updateProject(@PathVariable String name, @ModelAttribute @Valid Project project){
+		entityManager.merge(project);
 		return new ModelAndView("project/view", "project", project);
 	}
 	
 	@RequestMapping(value="/project/{name}",method=RequestMethod.GET)
 	public ModelAndView getProject(@PathVariable String name){
-		final Project project = entityManager.createNamedQuery("Project.findByName", Project.class).getSingleResult();
-		if(project == null)
-			throw new ResourceNotFoundException();
+		final Project project = entityManager.createNamedQuery("Project.findByName", Project.class).setParameter("name", name).getSingleResult();
 		return new ModelAndView("project/view", "project", project);
 	}
 	
 	@RequestMapping(value="/project/{name}",method=RequestMethod.DELETE)
 	@ResponseStatus(org.springframework.http.HttpStatus.NO_CONTENT) 
 	public void deleteProject(@PathVariable String name){
-		final Project project = entityManager.createNamedQuery("Project.findByName", Project.class).getSingleResult();
-		if(project == null)
-			throw new ResourceNotFoundException();
+		final Project project = entityManager.createNamedQuery("Project.findByName", Project.class).setParameter("name", name).getSingleResult();
 		entityManager.remove(project);
 	}
 	

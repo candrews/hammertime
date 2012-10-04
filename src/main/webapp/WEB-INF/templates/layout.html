@@ -1,0 +1,23 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring3-3.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <link ref="stylesheet" type="text/css" href="../../main.css" th:href="@{/resources/css/main.css}" />
+    </head>
+    <body>
+    	<header th:fragment="header">
+    	This is the header
+    	
+	   		<form th:action="@{/signin/facebook}" method="POST">
+				<button type="submit">Sign in with Facebook</button>
+				<input type="hidden" name="scope" value="publish_stream" />	
+			</form>
+    	
+    	</header>
+        <form>
+			Welcome!
+		</form>
+    	<footer th:fragment="footer">
+    	This is the footer
+    	</footer>
+    </body>
+</html>

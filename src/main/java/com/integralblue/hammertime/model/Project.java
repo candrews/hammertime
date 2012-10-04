@@ -1,9 +1,7 @@
 package com.integralblue.hammertime.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -25,7 +23,10 @@ import org.hibernate.validator.constraints.NotBlank;
 @Entity
 @NamedQueries({
 	@NamedQuery(name="Project.listAll", query = "select p from Project p"),
-	@NamedQuery(name="Project.findByName", query = "select p from Project p where p.name = :name")
+	@NamedQuery(name="Project.findByName", query = "select p from Project p where p.name = :name"),
+	@NamedQuery(name="Project.findByOwner", query = "select p from Project p where p.owner = :owner"),
+	@NamedQuery(name="Project.findByParticipant", query = "select p from Project p where :participant in p.participants"),
+	@NamedQuery(name="Project.findByCategory", query = "select p from Project p where :category in p.categories")
 })
 public class Project implements Serializable {
 	@Id
@@ -47,11 +48,11 @@ public class Project implements Serializable {
 	
 	// participants (not including the owner)
 	@ManyToMany
-	Set<FacebookUser> participants = new HashSet<FacebookUser>();
+	Set<User> participants = new HashSet<User>();
 	
 	@NotNull
 	@ManyToOne(optional=false)
-	FacebookUser owner;
+	User owner;
 
 	public Long getId() {
 		return id;
@@ -81,19 +82,19 @@ public class Project implements Serializable {
 		this.budget = budget;
 	}
 
-	public Set<FacebookUser> getParticipants() {
+	public Set<User> getParticipants() {
 		return participants;
 	}
 
-	public void setParticipants(Set<FacebookUser> participants) {
+	public void setParticipants(Set<User> participants) {
 		this.participants = participants;
 	}
 
-	public FacebookUser getOwner() {
+	public User getOwner() {
 		return owner;
 	}
 
-	public void setOwner(FacebookUser owner) {
+	public void setOwner(User owner) {
 		this.owner = owner;
 	}
 	

@@ -6,8 +6,6 @@
  
 	<persistence-unit name="DefaultPersistenceUnit" transaction-type="RESOURCE_LOCAL">
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
-		<!-- the JNDI data source -->
-		<!-- <non-jta-data-source>java:comp/env/jdbc/tutorialDS</non-jta-data-source> -->
 		<properties>
 			<!-- if this is true, hibernate will print (to stdout) the SQL it executes, 
 				so you can check it to ensure it's not doing anything crazy -->

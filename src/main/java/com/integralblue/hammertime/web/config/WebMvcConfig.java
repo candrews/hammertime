@@ -1,18 +1,26 @@
 package com.integralblue.hammertime.web.config;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+
+import javax.persistence.NoResultException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.smile.SmileFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
+import org.springframework.web.servlet.HandlerExceptionResolver;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer;
@@ -20,6 +28,7 @@ import org.springframework.web.servlet.config.annotation.ContentNegotiationConfi
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
+import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
 import org.springframework.web.servlet.view.ContentNegotiatingViewResolver;
 import org.springframework.web.servlet.view.json.MappingJacksonJsonView;
 import org.thymeleaf.spring3.SpringTemplateEngine;
@@ -34,12 +43,36 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
 	protected static final MediaType APPLICATION_X_JSON_SMILE = new MediaType("application","x-json-smile");
 
 	@Override
+	protected void configureHandlerExceptionResolvers(
+			List<HandlerExceptionResolver> exceptionResolvers) {
+		exceptionResolvers.add(new HandlerExceptionResolver() {
+			
+			@Override
+			public ModelAndView resolveException(HttpServletRequest request,
+					HttpServletResponse response, Object handler, Exception ex) {
+				if(ex instanceof NoResultException){
+					try {
+						response.sendError(HttpServletResponse.SC_NOT_FOUND);
+						return new ModelAndView();
+					} catch (IOException e) {
+						throw new RuntimeException(e);
+					}
+				}
+				return null;
+			}
+		});
+		addDefaultHandlerExceptionResolvers(exceptionResolvers);
+	}
+
+	@Override
 	public void configureAsyncSupport(AsyncSupportConfigurer configurer) {
 		configurer.setDefaultTimeout(30*1000L);
 	}
 
 	public void addViewControllers(ViewControllerRegistry registry) {
 		registry.addViewController("/").setViewName("welcome");
+		registry.addViewController("/signin");
+		registry.addViewController("/signout");
 	}
 
 	@Override

@@ -4,10 +4,16 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 
 import org.hibernate.validator.constraints.NotBlank;
 
 @Entity
+@NamedQueries({
+	@NamedQuery(name="Category.listAll", query = "select c from Category c"),
+	@NamedQuery(name="Category.findByName", query = "select c from Category c where c.name = :name")
+})
 public class Category {
 	
 	@Id
