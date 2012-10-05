@@ -39,7 +39,7 @@ public class ProjectController {
 	public String createProject(@ModelAttribute @Valid Project project){
 		project.setOwner(entityManager.find(User.class, securityContext.getCurrentUserId()));
 		entityManager.persist(project);
-		return "redirect:/projects/" + project.getName();
+		return "redirect:/project/" + project.getName();
 	}
 
 	@Transactional
@@ -47,7 +47,7 @@ public class ProjectController {
 	public String createProject(@PathVariable String name, @ModelAttribute @Valid Project project){
 		project.setOwner(entityManager.find(User.class, securityContext.getCurrentUserId()));
 		entityManager.persist(project);
-		return "redirect:/projects/" + project.getName();
+		return "redirect:/project/" + project.getName();
 	}
 
 	@Transactional
