@@ -16,7 +16,7 @@ public class SimpleConnectionSignUp implements ConnectionSignUp {
 	@Override
 	public String execute(Connection<?> connection) {
 		User user = new User();
-		user.setId(connection.getKey().getProviderId());
+		user.setId(connection.getKey().getProviderUserId());
 		entityManager.merge(user);
 		return user.getId();
 	}
