@@ -37,20 +37,26 @@ public class ProjectController {
 	@RequestMapping(value="/project/create",method=RequestMethod.POST)
 	public String createProject(@ModelAttribute @Valid Project project){
 		project.setOwner(entityManager.find(User.class, securityContext.getCurrentUserId()));
+		entityManager.getTransaction().begin();
 		entityManager.persist(project);
+		entityManager.getTransaction().commit();
 		return "redirect:/projects/" + project.getName();
 	}
 	
 	@RequestMapping(value="/project/{name}",method=RequestMethod.PUT)
 	public String createProject(@PathVariable String name, @ModelAttribute @Valid Project project){
 		project.setOwner(entityManager.find(User.class, securityContext.getCurrentUserId()));
+		entityManager.getTransaction().begin();
 		entityManager.persist(project);
+		entityManager.getTransaction().commit();
 		return "redirect:/projects/" + project.getName();
 	}
 
 	@RequestMapping(value="/project/{name}",method=RequestMethod.POST)
 	public ModelAndView updateProject(@PathVariable String name, @ModelAttribute @Valid Project project){
+		entityManager.getTransaction().begin();
 		entityManager.merge(project);
+		entityManager.getTransaction().commit();
 		return new ModelAndView("project/view", "project", project);
 	}
 	
@@ -64,7 +70,9 @@ public class ProjectController {
 	@ResponseStatus(org.springframework.http.HttpStatus.NO_CONTENT) 
 	public void deleteProject(@PathVariable String name){
 		final Project project = entityManager.createNamedQuery("Project.findByName", Project.class).setParameter("name", name).getSingleResult();
+		entityManager.getTransaction().begin();
 		entityManager.remove(project);
+		entityManager.getTransaction().commit();
 	}
 	
 	@RequestMapping(value="/project/{name}",method=RequestMethod.DELETE, consumes="text/html", produces="text/html")
