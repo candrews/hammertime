@@ -50,7 +50,6 @@ public class Project implements Serializable {
 	@ManyToMany
 	Set<User> participants = new HashSet<User>();
 	
-	@NotNull
 	@ManyToOne(optional=false)
 	User owner;
 
