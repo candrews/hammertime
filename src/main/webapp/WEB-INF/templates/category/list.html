@@ -1,0 +1,12 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring3-3.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Hammertime</title>
+        <link ref="stylesheet" type="text/css" href="../../main.css" th:href="@{/resources/css/main.css}" />
+    </head>
+    <body>
+    	<div th:substituteby="layout::header"></div>
+		List of categories
+    	<div th:substituteby="layout::footer"></div>
+    </body>
+</html>

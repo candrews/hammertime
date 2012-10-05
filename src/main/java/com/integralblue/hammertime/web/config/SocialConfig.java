@@ -1,6 +1,8 @@
 package com.integralblue.hammertime.web.config;
 
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 
 import org.springframework.context.annotation.Bean;
@@ -29,6 +31,8 @@ import com.integralblue.hammertime.model.User;
 
 @Configuration
 public class SocialConfig {
+	@PersistenceContext
+	EntityManager entityManager;
 
 	@Inject
 	private DataSource dataSource;
@@ -71,7 +75,7 @@ public class SocialConfig {
 	@Bean
 	@Scope(value = "request", proxyMode = ScopedProxyMode.INTERFACES)
 	public ConnectionRepository connectionRepository() {
-		String id = SecurityContext.getCurrentUser();
+		String id = securityContext().getCurrentUserId();
 		return usersConnectionRepository().createConnectionRepository(
 				id);
 	}
@@ -89,6 +93,12 @@ public class SocialConfig {
 		return connectionRepository().getPrimaryConnection(Facebook.class)
 				.getApi();
 	}
+	
+	@Bean
+	@Scope(value = "request", proxyMode=ScopedProxyMode.TARGET_CLASS)
+	public User currentUser(){
+		return entityManager.find(User.class, securityContext().getCurrentUserId());
+	}
 
 	/**
 	 * The Spring MVC Controller that allows users to sign-in with their
@@ -103,6 +113,10 @@ public class SocialConfig {
 	@Bean
 	public SignInAdapter signInAdapter(){
 		return new SimpleSignInAdapter();
+	}
+	
+	@Bean SecurityContext securityContext(){
+		return new SecurityContext();
 	}
 
 }

@@ -12,23 +12,23 @@ public class SecurityContext {
 
 	private static final ThreadLocal<String> currentUser = new ThreadLocal<String>();
 
-	public static String getCurrentUser() {
+	public String getCurrentUserId() {
 		String id = currentUser.get();
 		if (id == null) {
-			throw new IllegalStateException("No user is currently signed in");
+			throw new NotLoggedInException();
 		}
 		return id;
 	}
 
-	public static void setCurrentUser(String id) {
+	public void setCurrentUserId(String id) {
 		currentUser.set(id);
 	}
 
-	public static boolean userSignedIn() {
+	public boolean userSignedIn() {
 		return currentUser.get() != null;
 	}
 
-	public static void remove() {
+	public void remove() {
 		currentUser.remove();
 	}
 

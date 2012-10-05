@@ -1,5 +1,6 @@
 package com.integralblue.hammertime;
 
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -18,12 +19,15 @@ import org.springframework.web.context.request.NativeWebRequest;
  * @see UserInterceptor
  */
 public class SimpleSignInAdapter implements SignInAdapter {
+	
+	@Inject
+	SecurityContext securityContext;
 
 	private final UserCookieGenerator userCookieGenerator = new UserCookieGenerator();
 
 	public String signIn(String userId, Connection<?> connection,
 			NativeWebRequest request) {
-		SecurityContext.setCurrentUser(userId);
+		securityContext.setCurrentUserId(userId);
 		userCookieGenerator.addCookie(userId,
 				request.getNativeResponse(HttpServletResponse.class));
 		return null;

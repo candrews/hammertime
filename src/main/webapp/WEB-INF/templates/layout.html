@@ -5,13 +5,20 @@
     </head>
     <body>
     	<header th:fragment="header">
-    	This is the header
-    	
-	   		<form th:action="@{/signin/facebook}" method="POST">
-				<button type="submit">Sign in with Facebook</button>
-				<input type="hidden" name="scope" value="publish_stream" />	
-			</form>
-    	
+    		This is the header
+    		<div th:if="${! beans.securityContext.userSignedIn()}" >
+		   		<form th:action="@{/signin/facebook}" method="POST">
+					<button type="submit">Sign in with Facebook</button>
+					<input type="hidden" name="scope" value="publish_stream" />	
+				</form>
+    		</div>
+    		<div th:if="${ beans.securityContext.userSignedIn()}" >
+    			Welcome, <a th:href="${beans.facebook.userOperations().getUserProfile().getLink()}">
+    				<img th:src="${'https://graph.facebook.com/' + beans.facebook.userOperations().getUserProfile().getId() + '/picture?type=small&amp;return_ssl_resources=true'}" />
+    				<span th:text="${beans.facebook.userOperations().getUserProfile().getName()}">Example User</span>
+   				</a>
+   				<a href="#" th:href="@{/signout}">Sign out</a>
+    		</div>
     	</header>
         <form>
 			Welcome!

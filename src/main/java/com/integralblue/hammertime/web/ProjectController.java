@@ -2,6 +2,8 @@ package com.integralblue.hammertime.web;
 
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.validation.Valid;
@@ -14,26 +16,34 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.integralblue.hammertime.SecurityContext;
 import com.integralblue.hammertime.model.Project;
+import com.integralblue.hammertime.model.User;
 
 @Controller
 public class ProjectController {
 	@PersistenceContext
     private EntityManager entityManager;
 	
+	@Inject
+	SecurityContext securityContext;
+	
 	@RequestMapping(value="/project/create",method=RequestMethod.GET)
 	public ModelAndView createProjectForm(Project project){
+		securityContext.getCurrentUserId(); // makes sure the user is logged in
 		return new ModelAndView("project/create");
 	}
 	
 	@RequestMapping(value="/project/create",method=RequestMethod.POST)
 	public String createProject(@ModelAttribute @Valid Project project){
+		project.setOwner(entityManager.find(User.class, securityContext.getCurrentUserId()));
 		entityManager.persist(project);
 		return "redirect:/projects/{name}";
 	}
 	
 	@RequestMapping(value="/project/{name}",method=RequestMethod.PUT)
 	public String createProject(@PathVariable String name, @ModelAttribute @Valid Project project){
+		project.setOwner(entityManager.find(User.class, securityContext.getCurrentUserId()));
 		entityManager.persist(project);
 		return "redirect:/projects/{name}";
 	}

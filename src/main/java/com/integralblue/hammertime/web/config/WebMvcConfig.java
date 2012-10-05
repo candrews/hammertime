@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
 import javax.persistence.NoResultException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,12 +20,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
+import org.springframework.social.connect.UsersConnectionRepository;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
@@ -36,11 +39,16 @@ import org.thymeleaf.spring3.view.ThymeleafViewResolver;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 import org.thymeleaf.templateresolver.TemplateResolver;
 
+import com.integralblue.hammertime.NotLoggedInException;
+import com.integralblue.hammertime.UserInterceptor;
+
 @Configuration
 @ComponentScan(basePackages = { "com.integralblue.hammertime.web" })
 public class WebMvcConfig extends WebMvcConfigurationSupport {
 	
 	protected static final MediaType APPLICATION_X_JSON_SMILE = new MediaType("application","x-json-smile");
+	
+	private @Inject UsersConnectionRepository usersConnectionRepository;
 
 	@Override
 	protected void configureHandlerExceptionResolvers(
@@ -58,10 +66,28 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
 						throw new RuntimeException(e);
 					}
 				}
+				if(ex instanceof NotLoggedInException){
+					try {
+						response.sendError(HttpServletResponse.SC_FORBIDDEN);
+						return new ModelAndView();
+					} catch (IOException e) {
+						throw new RuntimeException(e);
+					}
+				}
 				return null;
 			}
 		});
 		addDefaultHandlerExceptionResolvers(exceptionResolvers);
+	}
+
+	@Override
+	protected void addInterceptors(InterceptorRegistry registry) {
+		registry.addInterceptor(userInterceptor());
+	}
+	
+	@Bean
+	public UserInterceptor userInterceptor(){
+		return new UserInterceptor(usersConnectionRepository);
 	}
 
 	@Override
