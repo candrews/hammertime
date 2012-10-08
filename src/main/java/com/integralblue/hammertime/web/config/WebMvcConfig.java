@@ -1,37 +1,48 @@
 package com.integralblue.hammertime.web.config;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Inject;
 import javax.persistence.NoResultException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.smile.SmileFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpStatus;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
-import org.springframework.social.connect.UsersConnectionRepository;
+import org.springframework.social.facebook.api.Facebook;
+import org.springframework.social.facebook.api.impl.FacebookTemplate;
+import org.springframework.social.facebook.connect.FacebookOAuth2Template;
+import org.springframework.social.facebook.web.FacebookCookieParser;
+import org.springframework.social.facebook.web.FacebookOAuth2CookieParser;
+import org.springframework.social.oauth2.AccessGrant;
+import org.springframework.social.oauth2.OAuth2Template;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
-import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
 import org.springframework.web.servlet.view.ContentNegotiatingViewResolver;
 import org.springframework.web.servlet.view.json.MappingJacksonJsonView;
 import org.thymeleaf.spring3.SpringTemplateEngine;
@@ -40,15 +51,18 @@ import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 import org.thymeleaf.templateresolver.TemplateResolver;
 
 import com.integralblue.hammertime.NotLoggedInException;
-import com.integralblue.hammertime.UserInterceptor;
 
 @Configuration
 @ComponentScan(basePackages = { "com.integralblue.hammertime.web" })
+@PropertySource("classpath:/social.properties")
 public class WebMvcConfig extends WebMvcConfigurationSupport {
 	
 	protected static final MediaType APPLICATION_X_JSON_SMILE = new MediaType("application","x-json-smile");
 	
-	private @Inject UsersConnectionRepository usersConnectionRepository;
+	@Bean
+	public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
+		return new PropertySourcesPlaceholderConfigurer();
+	}
 
 	@Override
 	protected void configureHandlerExceptionResolvers(
@@ -79,15 +93,48 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
 		});
 		addDefaultHandlerExceptionResolvers(exceptionResolvers);
 	}
-
-	@Override
-	protected void addInterceptors(InterceptorRegistry registry) {
-		registry.addInterceptor(userInterceptor());
+	
+	@Bean
+	@Scope(proxyMode=ScopedProxyMode.INTERFACES,value="request")
+	public Facebook facebook(@Value("${social.facebook.appid}") String appId, @Value("${social.facebook.appsecret}") String appSecret){
+		String accessToken = getAccessTokenFromCurrentRequest(appId, appSecret);
+		if(accessToken == null){
+			return new FacebookTemplate();
+		}else{
+			return new FacebookTemplate(accessToken);
+		}
 	}
 	
 	@Bean
-	public UserInterceptor userInterceptor(){
-		return new UserInterceptor(usersConnectionRepository);
+	public FacebookOAuth2Template facebookOAuth2Template(@Value("${social.facebook.appid}") String appId, @Value("${social.facebook.appsecret}") String appSecret){
+		return new FacebookOAuth2Template(appId, appSecret);
+	}
+	
+	private String getAccessTokenFromCurrentRequest(String appId, String appSecret){
+		ServletRequestAttributes sra = (ServletRequestAttributes)RequestContextHolder.getRequestAttributes();
+	    HttpServletRequest req = sra.getRequest();
+
+	    String accessToken = null;
+        Map<String,String> fbCookie = FacebookOAuth2CookieParser.parseFacebookCookie(req.getCookies(), appId, appSecret);
+        if(fbCookie!=null && fbCookie.containsKey("code")){
+            String authorizationCode = fbCookie.get("code");
+            AccessGrant accessGrant;
+			try {
+				accessGrant = facebookOAuth2Template(appId, appSecret).exchangeForAccess(URLEncoder.encode(authorizationCode,"UTF-8"), "", null);
+			} catch (UnsupportedEncodingException e) {
+				throw new RuntimeException(e);
+			}
+            if(accessGrant!=null){
+                accessToken = accessGrant.getAccessToken(); 
+            }
+        }
+	    
+		if (accessToken == null) {
+			// cookie value isn't there
+			// API users will use an API header - check that
+			accessToken = req.getHeader("X-Facebook-Access-Token");
+		}
+		return accessToken;
 	}
 
 	@Override

@@ -7,6 +7,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.validation.Valid;
 
+import org.springframework.social.facebook.api.Facebook;
+import org.springframework.social.facebook.web.FacebookCookieValue;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -16,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.integralblue.hammertime.SecurityContext;
+import com.integralblue.hammertime.NotLoggedInException;
 import com.integralblue.hammertime.model.Project;
 import com.integralblue.hammertime.model.User;
 
@@ -26,26 +28,29 @@ public class ProjectController {
     private EntityManager entityManager;
 	
 	@Inject
-	SecurityContext securityContext;
+	Facebook facebook;
 	
 	@RequestMapping(value="/project/create",method=RequestMethod.GET)
-	public ModelAndView createProjectForm(Project project){
-		securityContext.getCurrentUserId(); // makes sure the user is logged in
+	public ModelAndView createProjectForm(Project project, @FacebookCookieValue(value="access_token") String accessToken){
+		if(! facebook.isAuthorized()) throw new NotLoggedInException(); // makes sure the user is logged in
 		return new ModelAndView("project/create");
 	}
 	
 	@Transactional
 	@RequestMapping(value="/project/create",method=RequestMethod.POST)
 	public String createProject(@ModelAttribute @Valid Project project){
-		project.setOwner(entityManager.find(User.class, securityContext.getCurrentUserId()));
+		if(! facebook.isAuthorized()) throw new NotLoggedInException();
+		project.setOwner(entityManager.find(User.class, facebook.userOperations().getUserProfile().getId()));
 		entityManager.persist(project);
+		entityManager.flush();
 		return "redirect:/project/" + project.getName();
 	}
 
 	@Transactional
 	@RequestMapping(value="/project/{name}",method=RequestMethod.PUT)
 	public String createProject(@PathVariable String name, @ModelAttribute @Valid Project project){
-		project.setOwner(entityManager.find(User.class, securityContext.getCurrentUserId()));
+		if(! facebook.isAuthorized()) throw new NotLoggedInException();
+		project.setOwner(entityManager.find(User.class, facebook.userOperations().getUserProfile().getId()));
 		entityManager.persist(project);
 		return "redirect:/project/" + project.getName();
 	}
@@ -53,6 +58,7 @@ public class ProjectController {
 	@Transactional
 	@RequestMapping(value="/project/{name}",method=RequestMethod.POST)
 	public ModelAndView updateProject(@PathVariable String name, @ModelAttribute @Valid Project project){
+		if(! facebook.isAuthorized()) throw new NotLoggedInException();
 		entityManager.merge(project);
 		return new ModelAndView("project/view", "project", project);
 	}
@@ -67,6 +73,7 @@ public class ProjectController {
 	@RequestMapping(value="/project/{name}",method=RequestMethod.DELETE)
 	@ResponseStatus(org.springframework.http.HttpStatus.NO_CONTENT) 
 	public void deleteProject(@PathVariable String name){
+		if(! facebook.isAuthorized()) throw new NotLoggedInException();
 		final Project project = entityManager.createNamedQuery("Project.findByName", Project.class).setParameter("name", name).getSingleResult();
 		entityManager.remove(project);
 	}

@@ -30,9 +30,8 @@ public class PersistenceConfig {
 	@Bean(destroyMethod = "shutdown")
 	public DataSource dataSource() {
 		EmbeddedDatabaseFactory factory = new EmbeddedDatabaseFactory();
-		factory.setDatabaseName("spring-social-showcase");
+		factory.setDatabaseName("hammertime");
 		factory.setDatabaseType(EmbeddedDatabaseType.H2);
-		factory.setDatabasePopulator(databasePopulator());
 		return factory.getDatabase();
 	}
 	
@@ -42,13 +41,5 @@ public class PersistenceConfig {
         transactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
         return transactionManager;
     }
-
-	private DatabasePopulator databasePopulator() {
-		ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
-		populator.addScript(new ClassPathResource(
-				"JdbcUsersConnectionRepository.sql",
-				JdbcUsersConnectionRepository.class));
-		return populator;
-	}
 
 }

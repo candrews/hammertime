@@ -1,23 +1,46 @@
 <!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring3-3.dtd"> 
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:fb="http://ogp.me/ns/fb#">
     <head>
         <link ref="stylesheet" type="text/css" href="../../main.css" th:href="@{/resources/css/main.css}" />
     </head>
     <body>
     	<header th:fragment="header">
+		    <div id="fb-root"></div>
+			<script>//<![CDATA[
+			  window.fbAsyncInit = function() {
+			    FB.init({
+			      appId      : '110725189085402', // App ID
+			      status     : true, // check login status
+			      cookie     : true, // enable cookies to allow the server to access the session
+			      xfbml      : true  // parse XFBML
+			    });
+			
+			    // Additional initialization code here
+			  };
+			
+			  // Load the SDK Asynchronously
+			  (function(d){
+			     var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
+			     if (d.getElementById(id)) {
+			    	 return;
+		    	 }
+			     js = d.createElement('script');
+			     js.id = id;
+			     js.async = true;
+			     js.src = "https://connect.facebook.net/en_US/all.js";
+			     ref.parentNode.insertBefore(js, ref);
+			   }(document));
+			//]]></script>
+    		
     		This is the header
-    		<div th:if="${! beans.securityContext.userSignedIn()}" >
-		   		<form th:action="@{/signin/facebook}" method="POST">
-					<button type="submit">Sign in with Facebook</button>
-					<input type="hidden" name="scope" value="publish_stream" />	
-				</form>
+    		<div th:if="${! beans.facebook.isAuthorized()}" >
+		   		<fb:login-button show-faces="true" width="200" max-rows="1"></fb:login-button>
     		</div>
-    		<div th:if="${ beans.securityContext.userSignedIn()}" >
+    		<div th:if="${ beans.facebook.isAuthorized()}" >
     			Welcome, <a th:href="${beans.facebook.userOperations().getUserProfile().getLink()}">
     				<img th:src="${'https://graph.facebook.com/' + beans.facebook.userOperations().getUserProfile().getId() + '/picture?type=small&amp;return_ssl_resources=true'}" />
     				<span th:text="${beans.facebook.userOperations().getUserProfile().getName()}">Example User</span>
    				</a>
-   				<a href="#" th:href="@{/signout}">Sign out</a>
     		</div>
     	</header>
         <form>
