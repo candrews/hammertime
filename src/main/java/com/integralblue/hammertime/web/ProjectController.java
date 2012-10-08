@@ -7,6 +7,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.validation.Valid;
 
+import org.springframework.social.NotAuthorizedException;
 import org.springframework.social.facebook.api.Facebook;
 import org.springframework.social.facebook.web.FacebookCookieValue;
 import org.springframework.stereotype.Controller;
@@ -30,6 +31,20 @@ public class ProjectController {
 	@Inject
 	Facebook facebook;
 	
+	/** Gets the current user. If the user isn't in the database, it creates a database entry for them.
+	 * @return
+	 */
+	private User getCurrentUser(){
+		String userId = facebook.userOperations().getUserProfile().getId();
+		User user = entityManager.find(User.class, userId);
+		if(user==null){
+			user = new User();
+			user.setId(userId);
+			entityManager.persist(user);
+		}
+		return user;
+	}
+	
 	@RequestMapping(value="/project/create",method=RequestMethod.GET)
 	public ModelAndView createProjectForm(Project project, @FacebookCookieValue(value="access_token") String accessToken){
 		if(! facebook.isAuthorized()) throw new NotLoggedInException(); // makes sure the user is logged in
@@ -40,7 +55,7 @@ public class ProjectController {
 	@RequestMapping(value="/project/create",method=RequestMethod.POST)
 	public String createProject(@ModelAttribute @Valid Project project){
 		if(! facebook.isAuthorized()) throw new NotLoggedInException();
-		project.setOwner(entityManager.find(User.class, facebook.userOperations().getUserProfile().getId()));
+		project.setOwner(getCurrentUser());
 		entityManager.persist(project);
 		entityManager.flush();
 		return "redirect:/project/" + project.getName();
@@ -50,7 +65,7 @@ public class ProjectController {
 	@RequestMapping(value="/project/{name}",method=RequestMethod.PUT)
 	public String createProject(@PathVariable String name, @ModelAttribute @Valid Project project){
 		if(! facebook.isAuthorized()) throw new NotLoggedInException();
-		project.setOwner(entityManager.find(User.class, facebook.userOperations().getUserProfile().getId()));
+		project.setOwner(getCurrentUser());
 		entityManager.persist(project);
 		return "redirect:/project/" + project.getName();
 	}
@@ -75,6 +90,10 @@ public class ProjectController {
 	public void deleteProject(@PathVariable String name){
 		if(! facebook.isAuthorized()) throw new NotLoggedInException();
 		final Project project = entityManager.createNamedQuery("Project.findByName", Project.class).setParameter("name", name).getSingleResult();
+		if(! project.getOwner().getId().equals(getCurrentUser().getId())){
+			// TODO use a better exception
+			throw new RuntimeException("Can only delete projects you own");
+		}
 		entityManager.remove(project);
 	}
 	

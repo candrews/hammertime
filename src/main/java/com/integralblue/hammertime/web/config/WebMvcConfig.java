@@ -132,7 +132,7 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
 		if (accessToken == null) {
 			// cookie value isn't there
 			// API users will use an API header - check that
-			accessToken = req.getHeader("X-Facebook-Access-Token");
+			accessToken = req.getHeader("X-Facebook-Auth-Token");
 		}
 		return accessToken;
 	}
