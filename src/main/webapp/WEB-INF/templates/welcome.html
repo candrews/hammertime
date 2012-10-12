@@ -1,18 +1,51 @@
-<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring3-3.dtd"> 
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:fb="http://ogp.me/ns/fb#">
-    <head>
-        <title>Hammertime</title>
-        <link ref="stylesheet" type="text/css" href="../../main.css" th:href="@{/resources/css/main.css}" />
-    </head>
-    <body>
-    	<div th:substituteby="layout::header"></div>
-    	
-        <form>
-			Welcome!<br />
-			<a th:href="@{/project/create}">Create a project</a><br />
-			<a th:href="@{/project/list}">List projects</a><br />
-			<a th:href="@{/category/list}">List categories</a><br />
-		</form>
-    	<div th:substituteby="layout::footer"></div>
-    </body>
-</html>
+<!DOCTYPE html>
+<html xmlns:layout="layout" layout:decorator="layout">
+  <head>
+    <title>Content page 1</title>
+  </head>
+  <body id="home">
+<section  layout:fragment="content">
+
+        <div id="loginHeader">
+            
+            <!-- <a class="btn btn-large" href="#">Start Here</a> -->
+
+            <div id="loginHome">
+            			
+        			<div id="loggedOutScreen">
+        				<h2>Please sign in with Facebook to get started.</h2>
+  			 			<a href="#" id="auth-loginlink"> <img class="btn_facebook" src="/web/resources/img/btn_facebook.png" /></a>
+  			 		</div>
+  			 		
+            <a th:href="@{/project/create}">Create a project</a><br />
+            <a th:href="@{/project/list}">List projects</a><br />
+            <a th:href="@{/category/list}">List categories</a><br />
+
+<!--                 
+                <img class="btn_facebook" src="img/btn_facebook.png" /> -->
+            </div>
+            <img src="/web/resources/img/yarn.jpg" />
+        </div>
+
+        <div class="container">
+            <!-- Example row of columns -->
+            <div class="row homeSubNav">
+                <div class="span3">
+                    <p><a class="think" href="#" rel="popover" data-content="And here's some amazing content. It's very engaging. right?" data-original-title="A Title"><span>think</span></a></p>
+                </div>
+                <div class="span3">
+                    <p><a class="pin" href="#" rel="popover" data-content="And here's some amazing content. It's very engaging. right?" data-original-title="A Title"><span>pin</span></a></p>
+               </div>
+                <div class="span3">
+                    <p><a class="plan" href="#" rel="popover" data-content="And here's some amazing content. It's very engaging. right?" data-original-title="A Title"><span>plan</span></a></p>
+                </div>
+                <div class="span3">
+                    <p><a class="make" href="#" rel="popover" data-content="And here's some amazing content. It's very engaging. right?" data-original-title="A Title"><span>make</span></a></p>
+                </div>                
+
+            </div>
+
+
+        </div> <!-- /container -->
+ </section>
+ </body></html>

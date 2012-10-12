@@ -1,53 +1,53 @@
-<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring3-3.dtd"> 
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:fb="http://ogp.me/ns/fb#">
+<!DOCTYPE html>
+<html xmlns:fb="http://ogp.me/ns/fb#">
     <head>
-        <link ref="stylesheet" type="text/css" href="../../main.css" th:href="@{/resources/css/main.css}" />
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+        <title></title>
+        <meta name="description" content="" />
+        <meta name="viewport" content="width=device-width" />
+
+        <link rel="stylesheet" href="/web/resources/css/bootstrap.css" />
+        <link rel="stylesheet" href="/web/resources/css/bootstrap-responsive.css" />
+        <link rel="stylesheet" href="/web/resources/css/main.css" />
+
+        <script src="/web/resources/js/vendor/modernizr-2.6.1-respond-1.1.0.min.js"></script>
+		<script src="https://connect.facebook.net/en_US/all.js"></script>
     </head>
     <body>
-    	<header th:fragment="header">
-		    <div id="fb-root"></div>
-			<script>//<![CDATA[
-			  window.fbAsyncInit = function() {
-			    FB.init({
-			      appId      : '110725189085402', // App ID
-			      status     : true, // check login status
-			      cookie     : true, // enable cookies to allow the server to access the session
-			      xfbml      : true  // parse XFBML
-			    });
-			
-			    // Additional initialization code here
-			  };
-			
-			  // Load the SDK Asynchronously
-			  (function(d){
-			     var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
-			     if (d.getElementById(id)) {
-			    	 return;
-		    	 }
-			     js = d.createElement('script');
-			     js.id = id;
-			     js.async = true;
-			     js.src = "https://connect.facebook.net/en_US/all.js";
-			     ref.parentNode.insertBefore(js, ref);
-			   }(document));
-			//]]></script>
-    		
-    		This is the header
-    		<div th:if="${! beans.facebook.isAuthorized()}" >
-		   		<fb:login-button show-faces="true" width="200" max-rows="1"></fb:login-button>
-    		</div>
-    		<div th:if="${ beans.facebook.isAuthorized()}" >
-    			Welcome, <a th:href="${beans.facebook.userOperations().getUserProfile().getLink()}">
-    				<img th:src="${'https://graph.facebook.com/' + beans.facebook.userOperations().getUserProfile().getId() + '/picture?type=small&amp;return_ssl_resources=true'}" />
-    				<span th:text="${beans.facebook.userOperations().getUserProfile().getName()}">Example User</span>
-   				</a>
-    		</div>
-    	</header>
-        <form>
-			Welcome!
-		</form>
-    	<footer th:fragment="footer">
-    	This is the footer
-    	</footer>
+		<div id="fb-root"></div>
+        <div class=" home navbar navbar-inverse navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </a>
+                    <a class="brand" href="#">DoneDidIt</a>
+                    <div class="nav-collapse collapse" th:if="${ beans.facebook.isAuthorized()}" >
+                        <ul class="nav" >
+                            <li class="active"><a href="#">Start a Project</a></li>
+                            <li><a href="#about">Join a Project</a></li>
+                            <li><a href="#contact">How It Works</a></li>
+                        </ul>
+                        <!--<a href="#" class="pull-right">FACEBOOK</a> -->
+					         <div class="pull-right">         
+					       		 <div id="auth-loggedin">
+					        	  Hi, <span id="auth-displayname"></span>
+					        	 <img src="https://graph.facebook.com/picture?type=small&amp;return_ssl_resources=true" />
+					        		(<a href="#" id="auth-logoutlink">logout</a>)
+					      		</div>
+					    	</div>                     
+                    </div><!--/.nav-collapse -->
+                </div>
+            </div>
+        </div>
+    	    	<section  layout:fragment="content"></section>
+
+    		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+	        <script src="/web/resources/js/vendor/bootstrap.min.js"></script>
+	        <script src="/web/resources/js/plugins.js"></script>
+	        <script src="/web/resources/js/main.js"></script>
     </body>
 </html>

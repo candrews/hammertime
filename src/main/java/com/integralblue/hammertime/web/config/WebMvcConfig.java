@@ -12,6 +12,8 @@ import javax.persistence.NoResultException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import nz.net.ultraq.web.thymeleaf.LayoutDialect;
+
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.smile.SmileFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -195,6 +197,7 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
 	public SpringTemplateEngine templateEngine() {
 		SpringTemplateEngine engine = new SpringTemplateEngine();
 		engine.setTemplateResolver(templateResolver());
+		engine.addDialect(new LayoutDialect());	
 		return engine;
 	}
 
@@ -205,6 +208,7 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
 		resolver.setSuffix(".html");
 		resolver.setTemplateMode("HTML5");
 		resolver.setCacheable(false);
+		
 		return resolver;
 	}
 

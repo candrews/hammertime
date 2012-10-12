@@ -70,7 +70,7 @@
 		<dependency>
 		    <groupId>org.thymeleaf</groupId>
 		    <artifactId>thymeleaf-spring3</artifactId>
-		    <version>2.0.5</version>
+		    <version>2.0.13</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.slf4j</groupId>
@@ -162,6 +162,11 @@
 		    <groupId>org.springframework.social</groupId>
 		    <artifactId>spring-social-web</artifactId>
 		    <version>${spring-social.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>nz.net.ultraq.web.thymeleaf</groupId>
+			<artifactId>thymeleaf-layout-dialect</artifactId>
+			<version>1.0.4</version>
 		</dependency>
 	</dependencies>
 	

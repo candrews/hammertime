@@ -1,3 +1,116 @@
-body {
-	color:white
+
+
+/* ==========================================================================
+   Dimitri Kennedy's custom styles
+   ========================================================================== */
+
+#loginHeader{
+	position: relative;
+}
+
+#loginHome{
+	height: 100%;
+	width: 50%;
+	position: absolute;
+	z-index: 100;
+	display: block;
+	background: rgba(255,255,255,0.5);
+	margin: 0 25% 0;
+}
+
+#loginHome h2{
+	font-size: 20px;
+	font-weight: normal;
+	padding: 0 10px;
+}
+
+.btn_facebook{
+	margin: 0 auto;
+	width: 300px;
+	display: block;
+}
+
+#home{
+	background: #2a2f36;
+}
+
+#auth-loggedin img{
+	display: none;
+}
+
+.homeSubNav a{
+	background-image: url('../img/btns_home.png') ;
+	background-color: #fff;
+	height: 146px;
+	width: 243px;
+	display: inline-block;
+	*display: inline;
+	*zoom: 1;
+	text-decoration: none;
+	color: #fff;
+
+
+	 -webkit-transition-property:color, background;  
+	 -webkit-transition-duration: .6s, .4s;  
+	 -webkit-transition-timing-function: linear, linear;  
+
+	  -moz-transition-property:color, background;  
+	 -moz-transition-duration: .6s, .4s;  
+	 -moz-transition-timing-function: linear, linear;  
+
+	  -o-transition-property:color, background;  
+	 -o-transition-duration: .6s, .4s;  
+	 -o-transition-timing-function: linear, linear;  
+
+	  -ms-transition-property:color, background;  
+	 -ms-transition-duration: .6s, .4s;  
+	 -ms-transition-timing-function: linear, linear;  
+
+	 transition-property:color, background;  
+	 transition-duration: .6s, .4s;  
+	 transition-timing-function: linear, linear;  
+
+}
+
+.homeSubNav a span{
+	text-align: center;
+	display: block;
+	padding: 155px 0 0 0;
+	font-size: 20px;
+}
+
+a.think{
+	background-position: 0 0;
+}
+
+a.think:hover{
+	background-color: #fdff7c;
+	color: #fdff7c;
+}
+
+a.pin{
+	background-position: -243px  0;
+}
+
+a.pin:hover{
+	background-color: #ff7c7c;
+	color: #ff7c7c;
+}
+
+a.plan{
+	background-position: -486px 0;
+}
+
+a.plan:hover{
+	background-color: #7ca1ff;
+	color: #7ca1ff;
+}
+
+a.make{
+	background-position: -729px 0;
+}
+
+a.make:hover{
+	background-color: #7cff7c;
+	color: #7cff7c;
 }
