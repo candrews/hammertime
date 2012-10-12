@@ -8,7 +8,71 @@ HAMMERTIME = {
 	common: {
       init: function(){
     	  this.fbInit();
+    	  this.pintrestFeed();
+    	  
 		  },
+		  
+	pintrestFeed: function(global){
+
+		    var Pinterest = (function() {
+		        var options = {
+		            username: '',
+		            numEntries: 25,
+		            container: '#feed'
+		        };
+
+		        var feed;
+		        var container;
+
+		        var loadFeed = function() {
+		            google.load("feeds", "1", {callback:function(){
+		                container = $(options.container)
+		                feed = new google.feeds.Feed('http://pinterest.com/'+options.username+'/feed.rss');
+		                feed.setNumEntries(options.numEntries);
+		                feed.load(buildGrid);
+		            }});
+		        };
+
+		        var buildGrid = function(result) {
+		            if (!result.error) {
+		                container.html('');
+		                for (var i = 0; i < result.feed.entries.length; i++) {
+		                    var entry = result.feed.entries[i];
+		                    var html = $('<div class="item"><div>'+entry.content+'</div></div>');
+		                    html.find('a').attr('href', entry.link);
+		                    html.find('a').attr('target', '_blank');
+		                    html.find('p:nth-child(2)').remove();
+		                    container.append(html);
+		                }
+		            }
+		        };
+
+		        return {
+		            init: function(params) {
+
+		                //Set params
+		                params = params || {};
+		                for(var i in params) {
+		                    options[i] = params[i];
+		                }
+
+		                //Init
+		                loadFeed();
+		            }
+		        };
+
+		    // expose our module to the global object
+		    global.Pinterest = Pinterest;
+		})( this );
+
+
+		Pinterest.init({
+		    username: 'makozyra',
+		    numEntries: 25,
+		    container: '#feed',
+		});
+		
+	},  
 
 	  fbInit: function(){
 		  window.fbAsyncInit = function(){

@@ -38,6 +38,20 @@
 	display: none;
 }
 
+#feed{
+	width: 5000px;
+}
+
+#feedWrap{
+	width: 100%;
+	overflow: hidden;
+}
+
+#feed .item{
+	display: inline-block;
+	margin: 0 5px;
+}
+
 .homeSubNav a{
 	background-image: url('../img/btns_home.png') ;
 	background-color: #fff;
