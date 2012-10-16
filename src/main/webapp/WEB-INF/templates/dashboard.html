@@ -3,24 +3,22 @@
   <head>
     <title>Content page 1</title>
   </head>
-  <body id="project">
+  <body id="dashboard">
 <section  layout:fragment="content">
 
         <div id="loginHeader">
+            
+            <!-- <a class="btn btn-large" href="#">Start Here</a> -->
+
             <div id="loginHome">
-            <h1><strong>PROJECT NAME: </strong><span th:text="${project.name}"></span></h1>
-            <h1><strong>PROJECT BUDGET: </strong><span th:text="${project.budget}"></span></h1>
-            
-            <fieldset>
-            	<label>Enter a Pintrest username to load inspiration</label>
-            	<input type="text" placeholder="pintrest user name" id="pinUser" />
-            	<button id="pinSubmit">Submit</button>
-            </fieldset>
-            
-			<div class="flexslider">
-				<ul id="feed" class="slides"></ul>
-			</div>
-            
+
+            	<div id="feedWrap"><div id="feed"></div></div>
+	            <a th:href="@{/project/create}">Create a project</a><br />
+	            <a th:href="@{/project/list}">List projects</a><br />
+	            <a th:href="@{/category/list}">List categories</a><br />
+
+<!--                 
+                <img class="btn_facebook" src="img/btn_facebook.png" /> -->
             </div>
             <img src="/web/resources/img/yarn.jpg" />
         </div>
@@ -42,8 +40,8 @@
                 </div>                
 
             </div>
+
+
         </div> <!-- /container -->
  </section>
- 
- </body>
- </html>
+ </body></html>

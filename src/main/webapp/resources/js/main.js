@@ -8,71 +8,9 @@ HAMMERTIME = {
 	common: {
       init: function(){
     	  this.fbInit();
-    	  this.pintrestFeed();
-    	  
+  			var hoverOptions = {placement: 'top', trigger: 'hover'};
+  			$('.homeSubNav a').popover(hoverOptions);
 		  },
-		  
-	pintrestFeed: function(global){
-
-		    var Pinterest = (function() {
-		        var options = {
-		            username: '',
-		            numEntries: 25,
-		            container: '#feed'
-		        };
-
-		        var feed;
-		        var container;
-
-		        var loadFeed = function() {
-		            google.load("feeds", "1", {callback:function(){
-		                container = $(options.container)
-		                feed = new google.feeds.Feed('http://pinterest.com/'+options.username+'/feed.rss');
-		                feed.setNumEntries(options.numEntries);
-		                feed.load(buildGrid);
-		            }});
-		        };
-
-		        var buildGrid = function(result) {
-		            if (!result.error) {
-		                container.html('');
-		                for (var i = 0; i < result.feed.entries.length; i++) {
-		                    var entry = result.feed.entries[i];
-		                    var html = $('<div class="item"><div>'+entry.content+'</div></div>');
-		                    html.find('a').attr('href', entry.link);
-		                    html.find('a').attr('target', '_blank');
-		                    html.find('p:nth-child(2)').remove();
-		                    container.append(html);
-		                }
-		            }
-		        };
-
-		        return {
-		            init: function(params) {
-
-		                //Set params
-		                params = params || {};
-		                for(var i in params) {
-		                    options[i] = params[i];
-		                }
-
-		                //Init
-		                loadFeed();
-		            }
-		        };
-
-		    // expose our module to the global object
-		    global.Pinterest = Pinterest;
-		})( this );
-
-
-		Pinterest.init({
-		    username: 'makozyra',
-		    numEntries: 25,
-		    container: '#feed',
-		});
-		
-	},  
 
 	  fbInit: function(){
 		  window.fbAsyncInit = function(){
@@ -113,23 +51,106 @@ HAMMERTIME = {
 
 	        // respond to clicks on the login and logout links
 	        $('#auth-loginlink').on('click', function(){
+		      FB.Event.subscribe('auth.login', function () {
+		          window.location = "/web/project/create/";
+		      });
 	          FB.login();
 	        });
 
 	        
 	        $('#auth-logoutlink').on('click', function(){	
 	          FB.logout();
+		      FB.Event.subscribe('auth.logout', function () {
+		          window.location = "/web/";
+		      });
 	          
-	        }); 		   
+	        });
+	        
 		   
 	   }
     },
 
     home:{
     	init: function(){
-    		var hoverOptions = {placement: 'top', trigger: 'hover'};
-    		$('.homeSubNav a').popover(hoverOptions);
+
     	}
+    },
+    
+    project: {
+    	init: function(){
+    		var THIS = this;
+    		$('#pinSubmit').on('click', function(){
+    			THIS.pintrestFeed();
+    		});
+    	},
+		  
+    	pintrestFeed: function(global){
+
+    			var pinUser = $('#pinUser').val();
+    		    var Pinterest = (function() {
+
+    		        var options = {
+    		            username: pinUser,
+    		            numEntries: 25,
+    		            container: '#feed'
+    		        };
+
+    		        var feed;
+    		        var container;
+
+    		        var loadFeed = function() {
+    		            google.load("feeds", "1", {callback:function(){
+    		                container = $(options.container);
+    		                feed = new google.feeds.Feed('http://pinterest.com/'+options.username+'/feed.rss');
+    		                feed.setNumEntries(options.numEntries);
+    		                feed.load(buildGrid);
+    		            }});
+    		        };
+
+    		        var buildGrid = function(result) {
+    		            if (!result.error) {
+    		                container.html('');
+    		                for (var i = 0; i < result.feed.entries.length; i++) {
+    		                    var entry = result.feed.entries[i];
+    		                    var html = $('<li class="item"><div>'+entry.content+'</div></li>');
+    		                    html.find('a').attr('href', entry.link);
+    		                    html.find('a').attr('target', '_blank');
+    		                    html.find('p:nth-child(2)').remove();
+    		                    container.append(html);
+    		                }
+    		                $('.flexslider').flexslider({
+    		                    animation: "slide",
+    		                    animationLoop: false,
+    		                    itemWidth: 200,
+    		                    itemMargin: 5
+    		                  });
+    		            }
+    		        };
+
+    		        return {
+    		            init: function(params) {
+    		                params = params || {};
+    		                for(var i in params) {
+    		                    options[i] = params[i];
+    		                }
+    		                loadFeed();
+    		            }
+    		        };
+
+    		    // expose our module to the global object
+    		    global.Pinterest = Pinterest;
+    		})( this );
+
+
+    		Pinterest.init({
+    		    username: pinUser,
+    		    numEntries: 25,
+    		    container: '#feed',
+    		});
+    		
+    	},      	
+    	
+    	
     },
 
 }, 
