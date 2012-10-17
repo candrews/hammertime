@@ -5,10 +5,8 @@
   </head>
   <body id="project">
 <section  layout:fragment="content">
-
-        <div id="loginHeader">
-            <div id="loginHome">
-            <h1><strong>PROJECT NAME: </strong><span th:text="${project.name}"></span></h1>
+        <div class="container">
+                        <h1><strong>PROJECT NAME: </strong><span th:text="${project.name}"></span></h1>
             <h1><strong>PROJECT BUDGET: </strong><span th:text="${project.budget}"></span></h1>
             
             <fieldset>
@@ -19,30 +17,9 @@
             
 			<div class="flexslider">
 				<ul id="feed" class="slides"></ul>
-			</div>
-            
-            </div>
-            <img src="/web/resources/img/yarn.jpg" />
-        </div>
-
-        <div class="container">
-            <!-- Example row of columns -->
-            <div class="row homeSubNav">
-                <div class="span3">
-                    <p><a class="think" href="#" rel="popover" data-content="And here's some amazing content. It's very engaging. right?" data-original-title="A Title"><span>think</span></a></p>
-                </div>
-                <div class="span3">
-                    <p><a class="pin" href="#" rel="popover" data-content="And here's some amazing content. It's very engaging. right?" data-original-title="A Title"><span>pin</span></a></p>
-               </div>
-                <div class="span3">
-                    <p><a class="plan" href="#" rel="popover" data-content="And here's some amazing content. It's very engaging. right?" data-original-title="A Title"><span>plan</span></a></p>
-                </div>
-                <div class="span3">
-                    <p><a class="make" href="#" rel="popover" data-content="And here's some amazing content. It's very engaging. right?" data-original-title="A Title"><span>make</span></a></p>
-                </div>                
-
-            </div>
-        </div> <!-- /container -->
+       		 </div>
+       		 <div class="fb-like" data-send="true" show-faces="true" data-layout="button_count" data-width="450" data-show-faces="true"></div>
+        </div> <!-- /container ${project.name} -->
  </section>
  
  </body>

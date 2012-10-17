@@ -12,7 +12,6 @@
         <link rel="stylesheet" href="" th:href="@{/resources/css/main.css}" />
 
         <script src="/web/resources/js/vendor/modernizr-2.6.1-respond-1.1.0.min.js" th:src="@{/resources/js/vendor/modernizr-2.6.1-respond-1.1.0.min.js}"></script>
-		<script src="https://connect.facebook.net/en_US/all.js" ></script>
     </head>
     <body>
 		<div id="fb-root"></div>
@@ -24,12 +23,12 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </a>
-                    <a class="brand" href="#">DoneDidIt</a>
-                    <div class="nav-collapse collapse" th:if="${ beans.facebook.isAuthorized()}">
+                    <a class="brand" href="/web/">DoneDidIt</a>
+                    <div class="nav-collapse collapse" th:if="${beans.facebook.isAuthorized()}">
+                   
                         <ul class="nav" >
-                            <li class="active"><a href="#">Start a Project</a></li>
-                            <li><a href="#about">Join a Project</a></li>
-                            <li><a href="#contact">How It Works</a></li>
+                            <li class="active"><a th:href="@{/project/create}" href="/web/project/create">Start a Project</a></li>
+                            <li><a th:href="@{/project/list}" href="/web/project/list">My Projects</a></li>
                         </ul>
                         <!--<a href="#" class="pull-right">FACEBOOK</a> -->
 					         <div class="pull-right">         
@@ -48,7 +47,7 @@
     		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 	        <script src="/web/resources/js/vendor/bootstrap.min.js" th:src="@{/resources/js/vendor/bootstrap.min.js}"></script>
 	         <script src="https://www.google.com/jsapi"></script>​
-	        <script src="/web/resources/js/plugins.js" th:src="@{/resources/js/plugins.js}"></script>
+	         <script src="/web/resources/js/plugins.js" th:src="@{/resources/js/plugins.js}"></script>
 	        <script src="/web/resources/js/main.js" th:src="@{/resources/js/main.js}"></script>
     </body>
 </html>

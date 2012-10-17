@@ -23,12 +23,21 @@ HAMMERTIME = {
 			    });
 			  HAMMERTIME.common.fbConnect();
 		  	};
+		    (function(d){
+		        var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
+		        if (d.getElementById(id)) {return;}
+		        js = d.createElement('script'); js.id = id; js.async = true;
+		        js.src = "//connect.facebook.net/en_US/all.js";
+		        ref.parentNode.insertBefore(js, ref);
+		      }(document));
 	   },
 	   
 	   /*
 	    * binds FB login and logout functionality
 	    * */
 	   fbConnect: function(){
+			
+		   $('#auth-loginlink').fadeIn();
 	        FB.Event.subscribe('auth.statusChange', function(response) {
 	          if (response.authResponse) {
 	            // user has auth'd your app and is logged into Facebook
@@ -80,6 +89,7 @@ HAMMERTIME = {
     	init: function(){
     		var THIS = this;
     		$('#pinSubmit').on('click', function(){
+    			$('#feed li').remove();
     			THIS.pintrestFeed();
     		});
     	},
@@ -123,7 +133,7 @@ HAMMERTIME = {
     		                    animationLoop: false,
     		                    itemWidth: 200,
     		                    itemMargin: 5
-    		                  });
+    		                  }).fadeIn();
     		            }
     		        };
 

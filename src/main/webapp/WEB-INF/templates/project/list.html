@@ -1,12 +1,39 @@
-<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring3-3.dtd"> 
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-    <head>
-        <title>Hammertime</title>
-        <link ref="stylesheet" type="text/css" href="../../main.css" th:href="@{/resources/css/main.css}" />
-    </head>
-    <body>
-    	<div th:substituteby="layout::header"></div>
-		List of projects
-    	<div th:substituteby="layout::footer"></div>
-    </body>
-</html>
+<!DOCTYPE html>
+<html xmlns:layout="layout" layout:decorator="layout">
+  <head>
+    <title>Content page 1</title>
+  </head>
+  <body id="list">
+<section  layout:fragment="content">
+
+        <div id="loginHeader">
+            <div id="loginHome">
+            	<ul>
+            		   <li></li>
+            	</ul>
+            </div>
+            <img src="/web/resources/img/yarn.jpg" />
+        </div>
+
+        <div class="container">
+            <!-- Example row of columns -->
+            <div class="row homeSubNav">
+                <div class="span3">
+                    <p><a class="think" href="#" rel="popover" data-content="And here's some amazing content. It's very engaging. right?" data-original-title="A Title"><span>think</span></a></p>
+                </div>
+                <div class="span3">
+                    <p><a class="pin" href="#" rel="popover" data-content="And here's some amazing content. It's very engaging. right?" data-original-title="A Title"><span>pin</span></a></p>
+               </div>
+                <div class="span3">
+                    <p><a class="plan" href="#" rel="popover" data-content="And here's some amazing content. It's very engaging. right?" data-original-title="A Title"><span>plan</span></a></p>
+                </div>
+                <div class="span3">
+                    <p><a class="make" href="#" rel="popover" data-content="And here's some amazing content. It's very engaging. right?" data-original-title="A Title"><span>make</span></a></p>
+                </div>                
+
+            </div>
+        </div> <!-- /container -->
+ </section>
+ 
+ </body>
+ </html>
