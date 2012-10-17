@@ -11,10 +11,14 @@
             <!-- <a class="btn btn-large" href="#">Start Here</a> -->
 
             <div id="loginHome">
-
-            			<div id="loggedOutScreen">
+						<div th:if="${beans.facebook.isAuthorized()}">
+							<h2>Welcome!</h2>
+						</div> 
+						
+						
+            			<div th:if="${! beans.facebook.isAuthorized()}" id="loggedOutScreen">
             				<h2>Please sign in with Facebook to get started.</h2>
-      			 			<a href="#" id="auth-loginlink"> <img class="btn_facebook" src="/web/resources/img/btn_facebook.png" /></a>
+      			 			<a href="#" id="auth-loginlink"> <img class="btn_facebook" th:src="@{/resources/img/btn_facebook.png}" src="/web/resources/img/btn_facebook.png" /></a>
       			 		</div>
             </div>
             <img src="/web/resources/img/yarn.jpg" />

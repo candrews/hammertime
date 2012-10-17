@@ -91,11 +91,12 @@ HAMMERTIME = {
     		$('#pinSubmit').on('click', function(){
     			$('#feed li').remove();
     			THIS.pintrestFeed();
+    			console.log('clicked');
     		});
     	},
 		  
     	pintrestFeed: function(global){
-
+    			console.log('init');
     			var pinUser = $('#pinUser').val();
     		    var Pinterest = (function() {
 
@@ -134,6 +135,8 @@ HAMMERTIME = {
     		                    itemWidth: 200,
     		                    itemMargin: 5
     		                  }).fadeIn();
+    		            }else{
+    		            	alert('error!');
     		            }
     		        };
 

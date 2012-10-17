@@ -24,7 +24,7 @@
                         <span class="icon-bar"></span>
                     </a>
                     <a class="brand" href="/web/">DoneDidIt</a>
-                    <div class="nav-collapse collapse" >
+                    <div class="nav-collapse collapse" th:if="${beans.facebook.isAuthorized()}">
                    
                         <ul class="nav" >
                             <li class="active"><a th:href="@{/project/create}" href="/web/project/create">Start a Project</a></li>

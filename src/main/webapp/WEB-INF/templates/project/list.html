@@ -9,7 +9,7 @@
         <div id="loginHeader">
             <div id="loginHome">
             	<ul>
-            		   <li></li>
+            		   <li th:each="myList:${project.listAll()}" th:text="${myList.value}"></li>
             	</ul>
             </div>
             <img src="/web/resources/img/yarn.jpg" />
