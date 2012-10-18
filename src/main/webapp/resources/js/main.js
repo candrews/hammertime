@@ -61,7 +61,7 @@ HAMMERTIME = {
 	        // respond to clicks on the login and logout links
 	        $('#auth-loginlink').on('click', function(){
 		      FB.Event.subscribe('auth.login', function () {
-		          window.location = "/web/project/create/";
+		          window.location = "/hammertime/project/create/";
 		      });
 	          FB.login();
 	        });
@@ -70,7 +70,7 @@ HAMMERTIME = {
 	        $('#auth-logoutlink').on('click', function(){	
 	          FB.logout();
 		      FB.Event.subscribe('auth.logout', function () {
-		          window.location = "/web/";
+		          window.location = "/hammertime/";
 		      });
 	          
 	        });
